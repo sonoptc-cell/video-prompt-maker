@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>صانع بومبت الفيديو التعليمي الحواري</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#eef3f6;--surface:#fff;--ink:#12232e;--muted:#5b6b76;--line:#d3dde4;--a:#6d4ae0;--a-soft:#ece7fd;--b:#d9480f;--b-soft:#fdebe2;--ok:#0e7c7b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a21;--surface:#17252e;--ink:#e8f0f4;--muted:#93a6b2;--line:#2b3d49;--a:#a48dff;--a-soft:#2a2547;--b:#ff9a62;--b-soft:#3b2a20;--ok:#4cc9c6}}
+:root[data-theme="dark"]{--bg:#0f1a21;--surface:#17252e;--ink:#e8f0f4;--muted:#93a6b2;--line:#2b3d49;--a:#a48dff;--a-soft:#2a2547;--b:#ff9a62;--b-soft:#3b2a20;--ok:#4cc9c6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Cairo",Tahoma,"Segoe UI",sans-serif;line-height:1.7}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 24px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 6px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--a);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.names .na input{border-color:var(--a)}
+.names .nb input{border-color:var(--b)}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;font:inherit;font-weight:600;padding:10px 0;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.go{width:100%;margin-top:20px;font:inherit;font-weight:800;font-size:1.05rem;padding:12px;border:0;border-radius:12px;background:var(--ok);color:#fff;cursor:pointer}
+.go:hover{filter:brightness(1.08)}
+.strip{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:0 0 6px}
+.strip span{display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff}
+.strip .sa{background:var(--a)}.strip .sb{background:var(--b)}
+.ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-bottom:14px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+#out{min-height:360px;font-family:Consolas,Menlo,monospace;font-size:.85rem;line-height:1.6;direction:ltr;text-align:left;white-space:pre-wrap}
+.bar{display:flex;gap:8px;margin-top:10px;align-items:center}
+.bar button{font:inherit;font-weight:600;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.bar .cp{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.msg{color:var(--ok);font-weight:600;font-size:.9rem}
+.hint{color:var(--muted);font-size:.85rem;margin:8px 0 0}
+
+.char{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;border-inline-start:5px solid var(--a)}
+.char.cb{border-inline-start-color:var(--b)}
+.char textarea{margin-top:8px}
+.crow{display:flex;gap:8px;margin-top:8px}
+.crow select{flex:1}
+.crow button{font:inherit;font-weight:600;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.meter{border-radius:10px;padding:8px 12px;font-weight:600;font-size:.9rem;margin-bottom:12px;border:1px solid var(--line)}
+.meter.ok{background:var(--a-soft);color:var(--ink)}
+.meter.warn{background:var(--b-soft);color:var(--ink)}
+.meter.bad{background:var(--b);color:#fff;border-color:var(--b)}
+.ln{border-radius:10px;padding:8px;margin-bottom:8px;border:1px solid var(--line);border-inline-start:5px solid var(--a)}
+.ln.lb{border-inline-start-color:var(--b)}
+.lh{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:4px}
+.cnt{color:var(--muted)}
+.ln textarea{resize:vertical}
+.go:disabled{opacity:.6;cursor:wait}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tabs button,.mini{font:inherit;font-size:.85rem;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#tool{white-space:pre-wrap;margin:0 0 12px}
+#tool .mini{display:block;width:100%;text-align:start;border-radius:10px;margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>صانع بومبت الفيديو التعليمي الحواري</h1>
+  <p class="sub">اختر الشخصيتين والموضوع والمدة، وسيُبنى لك بومبت احترافي جاهز للعمل على Google Flow (Veo 3.1).</p>
+  <div class="grid">
+    <div class="panel">
+      <div class="char"><label for="nA">اسم الشخصية الأولى (تسأل)</label><input id="nA" value="سامي" maxlength="30">
+<textarea id="dA" rows="2" placeholder="الشكل والطباع، مثال: ولد بعمر 9 سنوات، قبعة حمراء، فضولي ومرح"></textarea>
+<div class="crow"><select id="selA" aria-label="الشخصيات المحفوظة"></select><button type="button" id="svA">حفظ</button><button type="button" id="dlA">حذف</button></div></div>
+<div class="char cb"><label for="nB">اسم الشخصية الثانية (تشرح)</label><input id="nB" value="الدكتورة ليلى" maxlength="30">
+<textarea id="dB" rows="2" placeholder="مثال: عالمة بمعطف أبيض ونظارات، هادئة وتشرح ببساطة"></textarea>
+<div class="crow"><select id="selB" aria-label="الشخصيات المحفوظة"></select><button type="button" id="svB">حفظ</button><button type="button" id="dlB">حذف</button></div></div>
+      <label for="topic">موضوع الفيديو العلمي</label>
+      <input id="topic" placeholder="مثال: لماذا السماء زرقاء؟" maxlength="120">
+      <label for="fact">المعلومة الأساسية (اختياري، تجعل الحوار أدق)</label>
+      <textarea id="fact" rows="2" placeholder="مثال: الغلاف الجوي يبعثر الضوء الأزرق أكثر من بقية الألوان"></textarea>
+      <label>مدة الفيديو</label>
+      <div class="seg" id="dur">
+        <button type="button" data-v="10" aria-pressed="false">10 ثوانٍ</button>
+        <button type="button" data-v="20" aria-pressed="true">20 ثانية</button>
+        <button type="button" data-v="30" aria-pressed="false">30 ثانية</button>
+      </div>
+      <div class="row">
+        <div><label for="kind">نوع الشخصيتين</label>
+          <select id="kind">
+            <option value="a curious child and a friendly scientist">طفل فضولي وعالِم ودود</option>
+            <option value="two friendly cartoon animals">حيوانان كرتونيان</option>
+            <option value="two cute robots">روبوتان لطيفان</option>
+            <option value="a student and a teacher">طالب ومعلّم</option>
+            <option value="two realistic humans, a host and an expert">مقدّم وخبير (واقعي)</option>
+          </select></div>
+        <div><label for="style">الأسلوب البصري</label>
+          <select id="style">
+            <option value="vibrant 3D animated cartoon, soft studio lighting, smooth motion">كرتون ثلاثي الأبعاد</option>
+            <option value="clean 2D flat motion-graphics animation, bold colors">رسوم مسطحة 2D</option>
+            <option value="cinematic photorealistic, shallow depth of field, natural lighting">سينمائي واقعي</option>
+            <option value="hand-drawn whiteboard-style animation with sketch lines">رسم يدوي على السبورة</option>
+          </select></div>
+      </div>
+      <div class="row">
+        <div><label for="lang">لغة الحوار</label>
+          <select id="lang"><option value="ar">العربية</option><option value="en">English</option></select></div>
+        <div><label for="ratio">أبعاد الفيديو</label>
+          <select id="ratio"><option value="9:16">9:16 عمودي</option><option value="16:9">16:9 أفقي</option><option value="1:1">1:1 مربع</option></select></div>
+      </div>
+      <label for="struct">هيكل الحوار</label>
+      <select id="struct"><option value="question and answer: character 1 asks, character 2 explains step by step">سؤال وجواب</option><option value="myth vs fact: character 1 states a common myth, character 2 corrects it with the real science">خرافة مقابل حقيقة</option><option value="did you know: character 2 opens with a surprising fact, character 1 reacts and asks why">هل تعلم؟</option><option value="challenge: the two characters bet on guessing the answer, then reveal it">تحدٍّ بين الشخصيتين</option></select>
+      <label for="aud">الفئة العمرية للمشاهدين</label>
+      <select id="aud"><option value="children aged 4-7">أطفال 4–7 سنوات</option><option value="children aged 8-12" selected>أطفال 8–12 سنة</option><option value="teenagers">مراهقون</option><option value="general adult audience">الجمهور العام</option></select>
+      <button type="button" class="go" id="go">ولّد الحوار والبومبت</button>
+      <p class="hint" id="st" role="status"></p>
+      <label for="hist">سجل البومبتات السابقة</label><select id="hist"><option value="">لا يوجد سجل بعد</option></select>
+    </div>
+
+    <div class="panel">
+      <div id="viz" class="empty">املأ البيانات واضغط «ولّد الحوار والبومبت».</div>
+      <div id="ed" hidden><div class="meter" id="meter"></div>
+<div class="tools"><button type="button" class="mini" id="chk">افحص الدقة العلمية</button><button type="button" class="mini" id="hk">اقترح 3 افتتاحيات</button><button type="button" class="mini" id="pb">ولّد نصوص النشر</button></div>
+<p class="hint" id="tool" role="status"></p><div id="lines"></div></div>
+      <div class="tabs" id="tabs" hidden><button type="button" data-t="full" aria-pressed="true">بومبت كامل</button><button type="button" data-t="clips" aria-pressed="false">مقاطع Flow</button><button type="button" data-t="ref" aria-pressed="false">صور مرجعية</button><button type="button" data-t="srt" aria-pressed="false">ترجمة SRT</button><button type="button" data-t="pub" aria-pressed="false">النشر</button></div>
+      <textarea id="out" hidden aria-label="البومبت الناتج"></textarea>
+      <div class="bar" id="bar" hidden>
+        <button type="button" class="cp" id="copy">نسخ البومبت</button>
+        <span class="msg" id="msg" role="status"></span>
+      </div>
+      <p class="hint" id="hint" hidden>عدّل أي جملة في الأعلى وسيتحدث البومبت والتوقيت فورًا.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var dur=20,lines=[],sampleNS=null,RATE={ar:2.4,en:2.7};
+  var NM=function(w){return $('n'+w).value.trim()||(w==='A'?'Character A':'Character B')};
+  var wc=function(t){return t.trim().split(/\s+/).filter(Boolean).length};
+  var maxW=function(){return Math.round(dur*RATE[$('lang').value]*0.92)};
+  var flash=function(t){$('st').textContent=t};
+  if(window.claude&&claude.use){claude.use('sample').then(function(x){sampleNS=x}).catch(function(){})}
+
+  var segs=document.querySelectorAll('#dur button');
+  segs.forEach(function(b){b.addEventListener('click',function(){
+    dur=+b.dataset.v;segs.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});refresh();
+  })});
+  ['nA','nB','dA','dB','kind','style','ratio','aud','lang','topic','fact'].forEach(function(i){$(i).addEventListener('input',refresh)});
+
+  /* Saved characters (per-browser) */
+  function load(){try{return JSON.parse(localStorage.getItem('vpm_chars')||'[]')}catch(e){return[]}}
+  function store(a){try{localStorage.setItem('vpm_chars',JSON.stringify(a));return true}catch(e){return false}}
+  ['A','B'].forEach(function(w){
+    var sel=$('sel'+w);
+    function fill(){var a=load();sel.textContent='';sel.appendChild(new Option('الشخصيات المحفوظة',''));a.forEach(function(c,i){sel.appendChild(new Option(c.name,i))})}
+    fill();
+    sel.addEventListener('change',function(){var c=sel.value===''?null:load()[+sel.value];if(c){$('n'+w).value=c.name;$('d'+w).value=c.desc;refresh()}});
+    $('sv'+w).addEventListener('click',function(){
+      var n=$('n'+w).value.trim();if(!n){flash('اكتب اسم الشخصية أولًا');return}
+      var a=load(),i=a.findIndex(function(c){return c.name===n}),c={name:n,desc:$('d'+w).value.trim()};
+      if(i>=0)a[i]=c;else a.push(c);
+      flash(store(a)?'تم حفظ «'+n+'» في هذا المتصفح':'تعذّر الحفظ في هذا المتصفح');fill();
+    });
+    $('dl'+w).addEventListener('click',function(){
+      if(sel.value==='')return;var a=load();var n=a[+sel.value].name;a.splice(+sel.value,1);store(a);fill();flash('تم حذف «'+n+'»');
+    });
+  });
+
+  /* Fallback template dialogue (used if AI is unavailable) */
+  function templates(lang,A,B,T,F,n){
+    var ar=lang==='ar';
+    var L=ar?[
+      B+'، ما هو «'+T+'»؟ أريد أن أفهمه بسرعة!',
+      F?('سؤال رائع يا '+A+'! الفكرة ببساطة: '+F+'.'):('سؤال رائع يا '+A+'! سأشرح لك الفكرة الأساسية الآن.'),
+      'مدهش! وكيف يحدث ذلك بالتفصيل؟',
+      'تخيّل معي: كل شيء يحدث خطوة بعد خطوة، ولكل خطوة سبب علمي واضح.',
+      'والآن فهمت! وكيف يرتبط هذا بحياتنا اليومية؟',
+      'تذكّر دائمًا: «'+T+'» يساعدنا على فهم العالم من حولنا. العلم ممتع!'
+    ]:[
+      'Hey '+B+', what exactly is "'+T+'"? I want to understand it fast!',
+      F?('Great question, '+A+'! Simply put: '+F+'.'):('Great question, '+A+'! Let me explain the core idea.'),
+      'Amazing! How does it actually happen?',
+      'Picture it step by step, and every step has a clear scientific reason.',
+      'Now I get it! How does this connect to our daily life?',
+      'Remember: "'+T+'" helps us understand the world. Science is fun!'
+    ];
+    return n===2?[L[0],L[1]]:n===4?[L[0],L[1],L[2],L[5]]:L;
+  }
+
+  async function ai(n,T,F){
+    if(!sampleNS&&window.claude&&claude.use){try{sampleNS=await claude.use('sample')}catch(e){}}
+    if(!sampleNS)throw {code:'none'};
+    var lang=$('lang').value==='ar'?'Arabic (simple clear Modern Standard Arabic, friendly tone)':'English';
+    var q='You write dialogue for a short educational science video.\nLanguage: '+lang+'\nTopic: '+T+(F?'\nKey fact to include: '+F:'')+
+      '\nAudience: '+$('aud').value+
+      '\nCharacter 1 ("'+NM('A')+'", asks questions): '+($('dA').value.trim()||'curious and energetic')+
+      '\nCharacter 2 ("'+NM('B')+'", explains): '+($('dB').value.trim()||'knowledgeable, calm, warm')+
+      '\nVideo length: '+dur+' seconds. Write exactly '+n+' lines, alternating speakers, starting with Character 1.'+
+      '\nSTRICT: total words across all lines must be at most '+maxW()+' (spoken pace).'+
+      '\nDialogue structure: '+$('struct').value+'.\nLine 1 must be an attention-grabbing hook. Be scientifically accurate and simple. End with one memorable takeaway.'+
+      '\nDo not put speaker names at the start of lines. Return ONLY a JSON array of '+n+' strings.';
+    var v=await sampleNS.json(q,{cache:false});
+    var arr=Array.isArray(v)?v:(v&&v.lines);
+    if(!Array.isArray(arr)||arr.length<2)throw {code:'bad'};
+    return arr.slice(0,n).map(function(x){return String(x&&x.text||x)});
+  }
+
+  async function gen(){
+    var T=$('topic').value.trim(),F=$('fact').value.trim();
+    if(!T){$('topic').focus();flash('اكتب موضوع الفيديو العلمي أولًا.');return}
+    var n=dur===10?2:dur===20?4:6,btn=$('go'),texts=null;
+    btn.disabled=true;btn.textContent='جارٍ كتابة الحوار…';flash('');
+    try{texts=await ai(n,T,F);flash('كُتب الحوار بالذكاء الاصطناعي، ويمكنك تعديل أي جملة.')}
+    catch(e){
+      texts=templates($('lang').value,NM('A'),NM('B'),T,F,n);
+      flash(e&&e.code==='not_granted'?'لم تُمنح صلاحية الذكاء الاصطناعي، استُخدم حوار جاهز بدلًا منه.':'تعذّر الذكاء الاصطناعي الآن، استُخدم حوار جاهز بدلًا منه. جرّب مرة أخرى.');
+    }
+    lines=texts.map(function(t,i){return {w:i%2?'B':'A',text:t}});
+    renderLines();$('ed').hidden=false;$('tabs').hidden=false;$('out').hidden=false;$('bar').hidden=false;$('hint').hidden=false;
+    refresh();btn.disabled=false;btn.textContent='أعد توليد الحوار';saveHist();
+  }
+  $('go').addEventListener('click',gen);
+
+  function renderLines(){
+    var box=$('lines');box.textContent='';
+    lines.forEach(function(l,i){
+      var d=document.createElement('div');d.className='ln '+(l.w==='A'?'la':'lb');
+      var h=document.createElement('div');h.className='lh';
+      var a=document.createElement('span');a.className='who';a.dataset.w=l.w;
+      var c=document.createElement('span');c.className='cnt';h.append(a,c);
+      var t=document.createElement('textarea');t.rows=2;t.value=l.text;t.setAttribute('aria-label','الجملة '+(i+1));
+      t.addEventListener('input',function(){l.text=t.value;refresh()});
+      d.append(h,t);box.appendChild(d);
+    });
+  }
+
+  function refresh(){
+    if(!lines.length)return;
+    var ws=lines.map(function(l){return Math.max(3,wc(l.text))}),W=ws.reduce(function(a,b){return a+b},0);
+    var tw=lines.reduce(function(s,l){return s+wc(l.text)},0),mx=maxW(),cls='ok',m;
+    if(tw>mx*1.1){cls='bad';m='الحوار أطول من اللازم، اختصر نحو '+(tw-mx)+' كلمة حتى لا يُقطع الكلام.'}
+    else if(tw>mx){cls='warn';m='قريب جدًا من الحد الأقصى، فكّر بتقصير بسيط.'}
+    else if(tw<mx*0.55){cls='warn';m='الحوار قصير، قد ينتهي الفيديو بصمت في آخره.'}
+    else m='الطول مناسب لمدة الفيديو.';
+    $('meter').className='meter '+cls;
+    $('meter').textContent=tw+' كلمة، والحد المناسب لـ '+dur+' ثانية نحو '+mx+' كلمة. '+m;
+    var els=document.querySelectorAll('#lines .ln');
+    lines.forEach(function(l,i){
+      els[i].querySelector('.who').textContent=NM(l.w);
+      els[i].querySelector('.cnt').textContent=wc(l.text)+' كلمة';
+    });
+    var h='<div class="strip">';
+    lines.forEach(function(l,i){h+='<span class="'+(l.w==='A'?'sa':'sb')+'" style="flex:'+ws[i]+'"></span>'});
+    h+='</div><div class="ticks"><span>0ث</span><span>'+Math.round(dur/2)+'ث</span><span>'+dur+'ث</span></div>';
+    $('viz').className='';$('viz').innerHTML=h;
+    var out=$('out');out.value=content(ws,W);out.style.direction=tab==='pub'?'rtl':'ltr';out.style.textAlign=tab==='pub'?'right':'left';
+  }
+
+  function prompt_(ws,W){
+    var A=NM('A'),B=NM('B'),T=$('topic').value.trim()||'(topic)',F=$('fact').value.trim();
+    var lang=$('lang').value,kind=$('kind').value,style=$('style').value,ratio=$('ratio').value;
+    var langName=lang==='ar'?'Arabic (clear Modern Standard Arabic, friendly tone)':'English';
+    var dA=$('dA').value.trim(),dB=$('dB').value.trim();
+    var p='Create a '+dur+'-second educational video, aspect ratio '+ratio+'.\n\nTOPIC: '+T+'\n';
+    if(F)p+='KEY FACT TO TEACH: '+F+'\n';
+    p+='TARGET AUDIENCE: '+$('aud').value+'\n';
+    p+='\nSTYLE: '+style+'. Clean, bright, engaging. Consistent look across all shots.\n\n';
+    p+='CHARACTERS (keep identical appearance, outfit and voice in every shot):\n';
+    p+='- '+A+' (asks the questions): '+(dA||'expressive face, energetic, surprised reactions')+'\n';
+    p+='- '+B+' (explains simply): '+(dB||'calm, warm, confident')+'\n';
+    p+='Character type: '+kind+'.\n\n';
+    p+='SETTING: a bright, uncluttered learning space related to the topic, with simple props or animated diagrams illustrating "'+T+'" as the characters talk.\n\nTIMELINE:\n';
+    var t=0;
+    lines.forEach(function(l,i){
+      var len=dur*ws[i]/W,s=t,e=t+len;t=e;
+      var sp=l.w==='A'?A:B;
+      p+='['+s.toFixed(1)+'s - '+e.toFixed(1)+'s] '+(i===0?'Medium two-shot establishing both characters. ':l.w==='A'?'Close-up on '+A+' reacting, then back to two-shot. ':'Slow push-in on '+B+' while an animated illustration of the concept appears beside them. ')+sp+' speaks.\n';
+      p+='  Dialogue ('+sp+'): "'+l.text.trim()+'"\n';
+    });
+    p+='\nAUDIO:\n- Natural, clear voices in '+langName+', a distinct voice per character, accurate lip-sync.\n- Light upbeat background music at low volume that never covers speech.\n- All dialogue must finish within '+dur+' seconds, with short natural pauses between lines.\n\n';
+    p+='EDUCATIONAL ELEMENTS: simple animated diagrams, arrows and icons that appear exactly when the concept is mentioned. Accuracy over decoration.\n\n';
+    p+='CAMERA & EDITING: smooth cuts, gentle camera movement, stable framing, faces always visible and well lit.\n\n';
+    p+='END: the last second holds a happy two-shot of both characters as the idea is summarized.\n\n';
+    p+='AVOID: distorted faces or hands, characters changing between shots, garbled or misspelled on-screen text, subtitles unless requested, watermarks, logos, scary imagery, speech running past '+dur+' seconds.';
+    return p;
+  }
+
+  var tab='full',pub='',SPD=8;
+  var tabs=document.querySelectorAll('#tabs button');
+  tabs.forEach(function(b){b.addEventListener('click',function(){tab=b.dataset.t;tabs.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});refresh()})});
+  function ts(n){var ms=Math.round(n*1000),z=function(v,l){return String(v).padStart(l||2,'0')};
+    return z(Math.floor(ms/3600000))+':'+z(Math.floor(ms%3600000/60000))+':'+z(Math.floor(ms%60000/1000))+','+z(ms%1000,3)}
+  function timing(ws,W){var t=0;return lines.map(function(l,i){var len=dur*ws[i]/W,o={s:t,e:t+len,w:l.w,text:l.text.trim()};t+=len;return o})}
+  function content(ws,W){
+    var tm=timing(ws,W);
+    if(tab==='clips')return clips(tm);
+    if(tab==='ref')return refp();
+    if(tab==='srt')return tm.map(function(x,i){return (i+1)+'\n'+ts(x.s)+' --> '+ts(x.e)+'\n'+x.text+'\n'}).join('\n');
+    if(tab==='pub')return pub||'اضغط «ولّد نصوص النشر» في الأعلى ليكتب Claude العنوان والوصف والهاشتاغات وبومبت الصورة المصغّرة.';
+    return prompt_(ws,W);
+  }
+  function chars(){return {A:NM('A'),B:NM('B'),dA:$('dA').value.trim()||'expressive and curious',dB:$('dB').value.trim()||'calm, warm, confident',T:$('topic').value.trim()||'(topic)',st:$('style').value,ratio:$('ratio').value,kind:$('kind').value}}
+  function clips(tm){
+    var c=chars(),k=Math.ceil(dur/SPD),L=dur/k,lg=$('lang').value==='ar'?'Arabic':'English';
+    var o='FLOW WORKFLOW (Veo 3.1): '+k+' clips of about '+L.toFixed(1)+'s each\n1. Make the images in the "صور مرجعية" tab and add them as Ingredients.\n2. Clip 1: Ingredients to Video, paste the clip 1 prompt.\n3. Each next clip: save the last frame of the previous clip, use Frames to Video with it as the first frame, then paste the next prompt.\n4. Join all clips in Scenebuilder or any editor.\n';
+    for(var i=0;i<k;i++){
+      var mine=tm.filter(function(x){return Math.min(k-1,Math.floor((x.s+x.e)/2/L))===i});
+      o+='\n=== CLIP '+(i+1)+' / '+k+' ===\n'+(i?'First frame: last frame of clip '+i+'.\n':'Ingredients: both character images + setting image.\n');
+      o+='Prompt:\n'+c.st+', aspect ratio '+c.ratio+'. '+c.A+' ('+c.dA+') and '+c.B+' ('+c.dB+') '+(i?'continue their conversation in the same setting, identical looks and outfits. ':'stand together in a bright learning space about "'+c.T+'". ')+'Medium two-shot, gentle camera movement, faces well lit, a simple animated diagram of the concept appears beside them.\n';
+      o+=mine.map(function(x){return (x.w==='A'?c.A:c.B)+' says in '+lg+': "'+x.text+'"'}).join('\n')+'\n';
+      o+='Audio: clear distinct voices, soft light music, no other speech. All speech finishes within '+L.toFixed(1)+' seconds.\n';
+      o+=(i<k-1?'End: hold a stable well-lit two-shot mid-conversation, a clean last frame for the next clip.':'End: a happy two-shot as the idea is summarized.')+'\nNo subtitles, no on-screen text, no watermark, no change to the characters.\n';
+    }
+    return o;
+  }
+  function refp(){
+    var c=chars();
+    return 'REFERENCE IMAGES for Flow Ingredients (generate all three in the same style)\n\n1) '+c.A+': '+c.st+', full-body character sheet, front view, plain background, '+c.kind+'. '+c.dA+'. Clean consistent design, no text.\n\n2) '+c.B+': '+c.st+', full-body character sheet, front view, plain background, '+c.kind+'. '+c.dB+'. Clean consistent design, no text.\n\n3) Setting: '+c.st+', '+c.A+' and '+c.B+' standing side by side in a bright learning space about "'+c.T+'", aspect ratio '+c.ratio+', no text. (Use as the clip 1 start image.)';
+  }
+
+  /* AI tools */
+  async function S(){
+    if(!sampleNS&&window.claude&&claude.use){try{sampleNS=await claude.use('sample')}catch(e){}}
+    if(!sampleNS)throw {code:'none'};return sampleNS;
+  }
+  function ctx(){return 'Topic: '+$('topic').value.trim()+'. Dialogue language: '+($('lang').value==='ar'?'Arabic':'English')+'. Audience: '+$('aud').value+'.\nDialogue:\n'+lines.map(function(l){return NM(l.w)+': '+l.text}).join('\n')}
+  async function run(btn,fn){
+    if(!lines.length){$('tool').textContent='ولّد الحوار أولًا.';return}
+    var t=btn.textContent;btn.disabled=true;btn.textContent='جارٍ العمل…';$('tool').textContent='';
+    try{await fn()}catch(e){$('tool').textContent=e&&e.code==='not_granted'?'لم تُمنح صلاحية الذكاء الاصطناعي.':'تعذّر تنفيذ الطلب الآن، جرّب مرة أخرى.'}
+    btn.disabled=false;btn.textContent=t;
+  }
+  $('chk').addEventListener('click',function(){run(this,async function(){
+    var s=await S(),r=await s('You are a careful science fact-checker. Check this educational video dialogue for scientific accuracy. Reply in Arabic. List up to 4 problems (errors or oversimplifications that mislead), each with a corrected sentence. If it is accurate, reply: الحوار دقيق علميًا.\n\n'+ctx(),{cache:false});
+    $('tool').textContent=r.text;
+  })});
+  $('hk').addEventListener('click',function(){run(this,async function(){
+    var s=await S(),v=await s.json('Write 3 different attention-grabbing opening lines (max 12 words each) for the first speaker of this video, each with a different angle (surprising fact, question, challenge). Same language as the dialogue. Return ONLY a JSON array of 3 strings.\n\n'+ctx(),{cache:false});
+    var box=$('tool');box.textContent='اختر افتتاحية لتحلّ محل الجملة الأولى:';
+    (Array.isArray(v)?v:[]).slice(0,3).forEach(function(h){
+      var b=document.createElement('button');b.type='button';b.className='mini';b.textContent=String(h);
+      b.addEventListener('click',function(){lines[0].text=String(h);renderLines();refresh();box.textContent='تم استبدال الجملة الأولى.'});
+      box.appendChild(b);
+    });
+  })});
+  $('pb').addEventListener('click',function(){run(this,async function(){
+    var s=await S(),v=await s.json('Create social media publishing text for this short educational video. Return ONLY JSON: {"title": catchy title under 60 chars, "description": 2 short sentences ending with a question to the viewer, "hashtags": array of 8 relevant hashtags with #, "thumbnail_prompt": an English image-generation prompt for an eye-catching thumbnail with the two characters}. Title and description in the dialogue language.\n\n'+ctx(),{cache:false});
+    pub='العنوان:\n'+v.title+'\n\nالوصف:\n'+v.description+'\n\nالهاشتاغات:\n'+(v.hashtags||[]).join(' ')+'\n\nبومبت الصورة المصغّرة:\n'+v.thumbnail_prompt;
+    tab='pub';tabs.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.t==='pub'?'true':'false')});refresh();$('tool').textContent='جاهزة في تبويب «النشر».';
+  })});
+
+  /* History */
+  var FIELDS=['nA','nB','dA','dB','topic','fact','kind','style','ratio','aud','lang','struct'];
+  function hl(){try{return JSON.parse(localStorage.getItem('vpm_hist')||'[]')}catch(e){return[]}}
+  function fillHist(){var a=hl(),h=$('hist');h.textContent='';h.appendChild(new Option(a.length?'اختر من السجل…':'لا يوجد سجل بعد',''));a.forEach(function(x,i){h.appendChild(new Option(x.f.topic+' ('+x.dur+'ث)',i))})}
+  function saveHist(){
+    var f={};FIELDS.forEach(function(i){f[i]=$(i).value});
+    var a=hl();a.unshift({f:f,lines:lines,dur:dur});
+    try{localStorage.setItem('vpm_hist',JSON.stringify(a.slice(0,15)))}catch(e){}
+    fillHist();
+  }
+  $('hist').addEventListener('change',function(){
+    var x=this.value===''?null:hl()[+this.value];if(!x)return;
+    FIELDS.forEach(function(i){$(i).value=x.f[i]});dur=x.dur;
+    segs.forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.v===dur?'true':'false')});
+    lines=x.lines;renderLines();$('ed').hidden=false;$('tabs').hidden=false;$('out').hidden=false;$('bar').hidden=false;$('hint').hidden=false;refresh();flash('تم تحميل العنصر من السجل.');
+  });
+  fillHist();
+
+  $('copy').addEventListener('click',function(){
+    var t=$('out');var done=function(ok){$('msg').textContent=ok?'تم النسخ ✓':'تعذّر النسخ، حدّد النص وانسخه يدويًا'};
+    function fb(){try{t.select();done(document.execCommand('copy'))}catch(e){done(false)}}
+    try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(function(){done(true)},fb)}else fb()}catch(e){fb()}
+  });
+})();
+</script>
+</body>
+</html>
